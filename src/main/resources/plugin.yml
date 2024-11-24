@@ -1,0 +1,4 @@
+name: SkyAntiXray
+version: '1.0.0'
+main: com.karpen.skyAntiXray.SkyAntiXray
+api-version: '1.21'

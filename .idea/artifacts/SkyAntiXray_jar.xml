@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="SkyAntiXray:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/SkyAntiXray_jar</output-path>
+    <root id="archive" name="SkyAntiXray.jar">
+      <element id="module-output" name="SkyAntiXray" />
+    </root>
+  </artifact>
+</component>
