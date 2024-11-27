@@ -3,6 +3,9 @@ package com.karpen.skyAntiXray;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -16,16 +19,42 @@ public final class SkyAntiXray extends JavaPlugin implements Listener {
 
     private final Map<UUID, Long> lastDiamondBreakTime = new HashMap<>();
     private final Map<UUID, Integer> diamondBreakCounter = new HashMap<>();
-    private final long thresholdTime = 120000;
-    private final int requiredBreaks = 4;
+
+    private long thresholdTime;
+    private int requiredBreaks;
 
     @Override
     public void onEnable() {
+        loadConfig();
+
         Bukkit.getPluginManager().registerEvents(this, this);
     }
 
     @Override
     public void onDisable() {
+    }
+
+    private void loadConfig(){
+        saveDefaultConfig();
+        FileConfiguration config = getConfig();
+
+        thresholdTime = config.getLong("thresholdTime");
+        requiredBreaks = config.getInt("requiredBreaks");
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (command.getName().equalsIgnoreCase("skyantixray")) {
+            if (args.length == 1 && args[0].equalsIgnoreCase("reload")){
+                loadConfig();
+                sender.sendMessage(ChatColor.GREEN + "Конфигурация SkyAntiXray успешно перезагружена");
+                return true;
+            } else {
+                sender.sendMessage(ChatColor.RED + "Использование: /skyantixray reload");
+                return true;
+            }
+        }
+        return false;
     }
 
     @EventHandler
