@@ -16,8 +16,8 @@ public final class SkyAntiXray extends JavaPlugin implements Listener {
 
     private final Map<UUID, Long> lastDiamondBreakTime = new HashMap<>();
     private final Map<UUID, Integer> diamondBreakCounter = new HashMap<>();
-    private final long thresholdTime = 120000; // 2 минуты в миллисекундах
-    private final int requiredBreaks = 4; // Количество подряд добытых алмазов
+    private final long thresholdTime = 120000;
+    private final int requiredBreaks = 4;
 
     @Override
     public void onEnable() {
@@ -26,7 +26,6 @@ public final class SkyAntiXray extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-        // Логика завершения работы плагина
     }
 
     @EventHandler
@@ -35,16 +34,12 @@ public final class SkyAntiXray extends JavaPlugin implements Listener {
             UUID playerId = event.getPlayer().getUniqueId();
             long currentTime = System.currentTimeMillis();
 
-            // Проверяем, если игрок уже добывал алмазы
             if (lastDiamondBreakTime.containsKey(playerId)) {
                 long lastBreakTime = lastDiamondBreakTime.get(playerId);
 
-                // Проверяем, если время между добычами меньше порога
                 if (currentTime - lastBreakTime < thresholdTime) {
-                    // Увеличиваем счётчик добытых алмазов
                     diamondBreakCounter.put(playerId, diamondBreakCounter.getOrDefault(playerId, 0) + 1);
 
-                    // Проверяем, достиг ли счётчик необходимого количества
                     if (diamondBreakCounter.get(playerId) >= requiredBreaks) {
                         String message = String.format(ChatColor.RED + "Подозрительная активность от игрока " + ChatColor.WHITE + "%s" + ChatColor.RED + " на координатах " + ChatColor.WHITE + "[%d, %d, %d]",
                                 event.getPlayer().getName(),
@@ -58,18 +53,14 @@ public final class SkyAntiXray extends JavaPlugin implements Listener {
                                 .forEach(op -> op.sendMessage(message));
                     }
                 } else {
-                    // Если время между добычами больше порога, сбрасываем счётчик
                     diamondBreakCounter.put(playerId, 1);
                 }
             } else {
-                // Если это первая добыча, инициализируем счётчик
                 diamondBreakCounter.put(playerId, 1);
             }
 
-            // Обновляем время последней добычи
             lastDiamondBreakTime.put(playerId, currentTime);
         } else {
-            // Если игрок добывает не алмазы, сбрасываем счётчик
             diamondBreakCounter.remove(event.getPlayer().getUniqueId());
         }
     }
